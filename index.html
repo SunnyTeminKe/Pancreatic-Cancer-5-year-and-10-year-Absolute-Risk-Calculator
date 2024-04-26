@@ -1,247 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pancreatic Cancer Risk Calculator</title>
-<style>
-body {
-        font-family: Arial, sans-serif; /* Sets a nice, readable font */
-        text-align: center; /* Centers text */
-        margin: 0;
-        padding: 0;
-        background: #f4f4f4; /* Light grey background */
-    }
-    .container {
-        max-width: 800px; /* Maximum width of the content */
-        margin: auto; /* Centers the content horizontally */
-        background: white;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Adds subtle shadow */
-    }
-    h1, h2, div {
-        margin-bottom: 20px; /* Adds space below each element */
-    }
-    select, input[type="button"] {
-        width: 100%; /* Makes the select boxes and button take full container width */
-        padding: 10px;
-        margin-top: 10px; /* Adds space above each form control */
-    }
-    h1 {
-        color: purple; /* Sets the title color to purple */
-    }
-    input[type="button"] {
-        font-size: 1.2em; /* Makes button text larger */
-        background-color: pink; /* Sets button color to pink */
-        color: white; /* Optional: changes the text color to white */
-        border: none; /* Optional: removes the border */
-        cursor: pointer; /* Changes the cursor to a pointer when hovering over the button */
-    }
-    input[type="button"]:hover {
-        background-color: #ff69b4; /* Changes the button color when hovered */
-    }
-    .result, .large-bold {
-    font-size: 1.2em;
-    color: #333;
-    padding: 10px;
-    background: #e9e9e9;
-    border: 1px solid #ccc;
-    margin-top: 20px;
-	}
-	.large-bold {
-    font-size: 1.5em; /* Larger and bold for specific risk results */
-    font-weight:bold;
-    }
-	.reference-text {
-    font-size: 1em; /* Standard text size for references */
-    text-align: left; /* Aligns text to the left */
-    margin-top: 30px; /* Adds space above the reference text */
-	}
-</style>
-<script>
-function calculateRisk() {
-	console.log("Function is being called");
-    var genderOR = { "Female": 1, "Male": 1.17 };
-    var ageOR = {
-        "40-44": 1,
-        "45-49": 1.94,
-        "50-54": 2.88,
-        "55-59": 4.79,
-        "60-64": 8.22,
-        "65-69": 12.51,
-        "70-74": 15.67
-    };
-    var bloodTypeOR = { "O": 1, "Non-O": 1.19 };
-    var prsOR = { "Q1": 1, "Q2": 1, "Q3": 1, "Q4": 1.67, "Q5": 2.03 };
-    var tobaccoOR = { "Never": 1, "Previous": 1, "Current": 1.8 };
-    var alcoholOR = { "Never": 1, "Men28Women14": 1, "MenOver28WomenOver14": 1.26 };
-    var pancreatitisOR = { "No": 1, "Yes": 3.98 };
-    var diabetesOR = { "No": 1, "Yes": 2.59 };
-    var gallbladderOR = { "No": 1, "Yes": 2.05 };
-
-    var selectedGender = document.getElementById('genderSelect').value;
-    var selectedAge = document.getElementById('ageSelect').value;
-    var selectedBloodType = document.getElementById('bloodTypeSelect').value;
-    var selectedPRS = document.getElementById('prsSelect').value;
-    var selectedTobacco = document.getElementById('tobaccoSelect').value;
-    var selectedAlcohol = document.getElementById('alcoholSelect').value;
-    var selectedPancreatitis = document.getElementById('pancreatitisSelect').value;
-    var selectedDiabetes = document.getElementById('diabetesSelect').value;
-    var selectedGallbladder = document.getElementById('gallbladderSelect').value;    	
-	// IR values based on gender and age
-    var irValues = {
-        "Male": {
-            "40-44": 2.1,
-            "45-49": 4.8,
-            "50-54": 9.4,
-            "55-59": 17.7,
-            "60-64": 28.2,
-            "65-69": 43.1,
-            "70-74": 55.5,           
-        },
-        // Assuming IR values for Females if needed, or replicate the structure for females with their IRs
-        "Female": {
-            "40-44": 1.6,
-            "45-49": 3.4,
-            "50-54": 6.6,
-            "55-59": 11.7,
-            "60-64": 20.4,
-            "65-69": 33.2,
-            "70-74": 46.9, 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pancreatic Cancer Risk Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
         }
-    };		
-    // b2 values based on gender and age
-    var b2Values = {
-        "Male": {
-            "40-44": 179.7,
-            "45-49": 262.7,
-            "50-54": 412.4,
-            "55-59": 655.9,
-            "60-64": 1016.9,
-            "65-69": 1658.9,
-            "70-74": 2693.8,           
-        },
-        "Female": {
-            "40-44": 110.7,
-            "45-49": 170.3,
-            "50-54": 274.9,
-            "55-59": 421.6,
-            "60-64": 644.9,
-            "65-69": 1027.2,
-            "70-74": 1738.3,      
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-	 };
-	 // b3 values based on gender and age
-    var b3Values = {
-        "Male": {
-            "40-44": 6.9,
-            "45-49": 6.9,
-            "50-54": 27.1,
-            "55-59": 27.1,
-            "60-64": 71.3,
-            "65-69": 71.3,
-            "70-74": 130.4,           
-        },
-        "Female": {
-            "40-44": 5,
-            "45-49": 5,
-            "50-54": 18.3,
-            "55-59": 18.3,
-            "60-64": 53.6,
-            "65-69": 53.6,
-            "70-74": 110.1, 
+        h1, h2, div {
+            margin-bottom: 20px;
         }
-    };	
-	 // b4 values based on gender and age
-    var b4Values = {
-        "Male": {
-            "40-44": 442.4,
-            "45-49": 442.4,
-            "50-54": 1068.3,
-            "55-59": 1068.3,
-            "60-64": 2675.8,
-            "65-69": 2675.8,
-            "70-74": 7318.9,           
-        },
-        "Female": {
-            "40-44": 281,
-            "45-49": 281,
-            "50-54": 696.5,
-            "55-59": 696.5,
-            "60-64": 1672.1,
-            "65-69": 1672.1,
-            "70-74": 4848.5, 
+        select, input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
         }
-    };	
-	// Calculate the total OR by multiplying the ORs of all selected risk factors
-    var totalOR = genderOR[selectedGender] * ageOR[selectedAge] * bloodTypeOR[selectedBloodType] * prsOR[selectedPRS] * tobaccoOR[selectedTobacco] * alcoholOR[selectedAlcohol] * pancreatitisOR[selectedPancreatitis] * diabetesOR[selectedDiabetes] * gallbladderOR[selectedGallbladder];
-	// Retrieve the IR (for b1) and b2 values based on gender and age
-	// Check if the selected gender and age are in the irValues structure
-    var selectedIR = irValues[selectedGender][selectedAge] || 0;
-	// Check if the selected gender and age are in the b2Values structure
-	var selectedB2 = b2Values[selectedGender][selectedAge] || 0;
-	var selectedB3 = b3Values[selectedGender][selectedAge] || 0;
-	var selectedB4 = b4Values[selectedGender][selectedAge] || 0;
-	// Calculate b1 b2 based on the selected IR
-    var b1 = (selectedIR / 100000) * 0.1;
-	var b2 = (selectedB2 / 100000);
-	var b3 = (selectedB3 / 100000) * 0.1;
-	var b4 = (selectedB4 / 100000);
-	// Calculate the 5-year absolute risk using the provided formula
-    var b1_totalOR = b1 * totalOR;
-    var fiveYearRiskNumerator = b1_totalOR;
-    var fiveYearRiskDenominator = b1_totalOR + b2;
-    var fiveYearRisk = (fiveYearRiskNumerator / fiveYearRiskDenominator) * (1 - Math.exp(-5 * fiveYearRiskDenominator));
-	var fiveYearRisknew=fiveYearRisk*100;
-	// Calculate the 10-year absolute risk using the provided formula
-    var b3_totalOR = b3 * totalOR;
-    var tenYearRiskNumerator = b3_totalOR;
-    var tenYearRiskDenominator = b3_totalOR + b4;
-    var tenYearRisk = (tenYearRiskNumerator / tenYearRiskDenominator) * (1 - Math.exp(-10 * tenYearRiskDenominator));
-	var tenYearRisknew=tenYearRisk*100;
-	
-    // // Display the results with the specified number of decimal places
-    document.getElementById('totalOR').innerText = 'Total OR: ' + totalOR.toFixed(4);
-    document.getElementById('b1Result').innerText = 'b1: ' + b1.toFixed(8); // Added to display b1 result
-	document.getElementById('b2Result').innerText = 'b2: ' + b2.toFixed(8); // Added to display b2 result
-	document.getElementById('b3Result').innerText = 'b3: ' + b3.toFixed(8); // Added to display b1 result
-	document.getElementById('b4Result').innerText = 'b4: ' + b4.toFixed(8); // Added to display b2 result
-	document.getElementById('fiveYearRisk').innerText = '5-year absolute risk of pancreatic cancer: ' + fiveYearRisknew.toFixed(2)+'%';
-	document.getElementById('tenYearRisk').innerText = '10-year absolute risk of pancreatic cancer: ' + tenYearRisknew.toFixed(2)+'%';
-}	
-
-</script>
+        h1 {
+            color: purple;
+        }
+        input[type="button"] {
+            font-size: 1.2em;
+            background-color: pink;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="button"]:hover {
+            background-color: #ff69b4;
+        }
+        .result, .large-bold {
+            font-size: 1.2em;
+            color: #333;
+            padding: 10px;
+            background: #e9e9e9;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+        .large-bold {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .reference-text, .footnote {
+            font-size: 1em;
+            text-align: left;
+            margin-top: 30px;
+            margin-bottom: 20px; /* Added space above and below the text for clarity */
+        }
+        .footnote {
+            font-style: italic; /* Styles the footnote in italic */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="container">
-	<h1>Pancreatic Cancer 5-year and 10-year Absolute Risk Calculator</h1>
-
-	<form id="riskForm">
-		<h2>Risk Variables</h2>
-		<!-- Gender Selection -->
-		<div>
-			<label for="genderSelect">Gender:</label>
-			<select id="genderSelect" class="or-input">
-				<option value="Female">Female</option>
-				<option value="Male">Male</option>
-			</select>
-		</div>
-
-	<!-- Age Selection -->
-		<div>
-			<label for="ageSelect">Age:</label>
-			<select id="ageSelect" class="or-input">
-				<option value="40-44">40-44</option>
-				<option value="45-49">45-49</option>
-				<option value="50-54">50-54</option>
-				<option value="55-59">55-59</option>
-				<option value="60-64">60-64</option>
-				<option value="65-69">65-69</option>
-				<option value="70-74">70-74</option>
-			</select>
-		</div>
-
-	<!-- Blood Type Selection -->
+    <h1>Pancreatic Cancer 5-year and 10-year Absolute Risk Calculator</h1>
+    <form id="riskForm">
+        <h2>Risk Variables</h2>
+        <!-- Gender Selection -->
+        <div>
+            <label for="genderSelect">Gender:</label>
+            <select id="genderSelect" class="or-input">
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+            </select>
+        </div>
+        <!-- Age Selection -->
+        <div>
+            <label for="ageSelect">Age:</label>
+            <select id="ageSelect" class="or-input">
+                <option value="40-44">40-44</option>
+                <option value="45-49">45-49</option>
+                <option value="50-54">50-54</option>
+                <option value="55-59">55-59</option>
+                <option value="60-64">60-64</option>
+                <option value="65-69">65-69</option>
+                <option value="70-74">70-74</option>
+            </select>
+        </div>
+        <!-- Blood Type Selection -->
 		<div>
 			<label for="bloodTypeSelect">Blood Type:</label>
 			<select id="bloodTypeSelect" class="or-input">
@@ -250,7 +99,7 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- PRS Selection -->
+		<!-- PRS Selection -->
 		<div>
 			<label for="prsSelect">Polygenic score (PRS):</label>
 			<select id="prsSelect" class="or-input">
@@ -262,7 +111,7 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- Tobacco Selection -->
+		<!-- Tobacco Selection -->
 		<div>
 			<label for="tobaccoSelect">Tobacco smoking status:</label>
 			<select id="tobaccoSelect" class="or-input">
@@ -272,7 +121,7 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- Alcohol Selection -->
+		<!-- Alcohol Selection -->
 		<div>
 			<label for="alcoholSelect">Alcohol consumption amount:</label>
 			<select id="alcoholSelect" class="or-input">
@@ -282,7 +131,7 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- Pancreatitis Selection -->
+		<!-- Pancreatitis Selection -->
 		<div>
 			<label for="pancreatitisSelect">Pancreatitis:</label>
 			<select id="pancreatitisSelect" class="or-input">
@@ -291,7 +140,7 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- Diabetes Selection -->
+		<!-- Diabetes Selection -->
 		<div>
 			<label for="diabetesSelect">Diabetes mellitus (DM):</label>
 			<select id="diabetesSelect" class="or-input">
@@ -300,7 +149,7 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- Gallbladder Selection -->
+		<!-- Gallbladder Selection -->
 		<div>
 			<label for="gallbladderSelect">Gallbladder disease(cholecystitis/cholelithiasis/cholecystectomy):</label>
 			<select id="gallbladderSelect" class="or-input">
@@ -309,22 +158,222 @@ function calculateRisk() {
 			</select>
 		</div>
 
-	<!-- Calculate Button -->
-		<input type="button" value="Calculate 5-year and 10-year Absolute Risk of Pancreatic Cancer" onclick="calculateRisk()">
-	</form>
+        <!-- Calculate Button -->
+        <input type="button" value="Calculate 5-year and 10-year Absolute Risk of Pancreatic Cancer" onclick="calculateRisk()">
+    </form>
 
-	<div id="totalOR" style="display: none;">Total OR: </div>
+    <!-- Output Display -->
+    <div id="totalOR" class="result" style="display: none;"></div>
 	<div id="b1Result" style="display: none;">b1: </div>
 	<div id="b2Result" style="display: none;">b2: </div>
 	<div id="b3Result" style="display: none;">b3: </div>
 	<div id="b4Result" style="display: none;">b4: </div>
-
 	<div id="fiveYearRisk" class="large-bold">5-year absolute risk of pancreatic cancer: </div>
-    <div id="tenYearRisk" class="large-bold">10-year absolute risk of pancreatic cancer: </div>
-	    <!-- Reference and welcome message -->
+    <div id="tenYearRisk" class="large-bold">10-year absolute risk of pancreatic cancer: </div>  
+    <canvas id="riskChart"></canvas>
+	<!-- Footnote -->
+    <p class="footnote">
+        The total lifetime risk in the general population is calculated based on the 2006-2010 total lifetime pancreatic cancer risk for both genders in England and Wales.
+    </p>
+    <!-- Reference and Welcome Message -->
     <p class="reference-text">
         Welcome to our model. The reference for this model is from Ke TM, Lophatananon A, Muir KR. An Integrative Pancreatic Cancer Risk Prediction Model in the UK Biobank. Biomedicines. 2023 Dec 1;11(12):3206. doi: <a href="http://10.3390/biomedicines11123206" target="_blank">10.3390/biomedicines11123206</a>. PMID: 38137427; PMCID: PMC10740416. If you use it, please cite the above reference.
     </p>
 </div>
+<script>
+    // Chart.js configuration and update function
+    var ctx = document.getElementById('riskChart').getContext('2d');
+    var riskChart = new Chart(ctx, {
+        type: 'bar', // Type of chart: bar chart for histogram
+        data: {
+            labels: ['Total Lifetime Risk in the General Population','5-Year Risk', '10-Year Risk'], // Labels for the bars
+            datasets: [{
+                label: 'Risk of Pancreatic Cancer (%)',
+                data: [1.3,0, 0], // Initial data with the static lifetime risk value
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)' ,
+					'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'					
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+					'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'					 
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    function updateChart(fiveYearRisk, tenYearRisk) {
+        riskChart.data.datasets[0].data = [fiveYearRisk, tenYearRisk];
+        riskChart.update();
+    }
+
+    function calculateRisk() {
+        console.log("Function is being called");
+        var genderOR = { "Female": 1, "Male": 1.17 };
+		var ageOR = {
+			"40-44": 1,
+			"45-49": 1.94,
+			"50-54": 2.88,
+			"55-59": 4.79,
+			"60-64": 8.22,
+			"65-69": 12.51,
+			"70-74": 15.67
+		};
+		var bloodTypeOR = { "O": 1, "Non-O": 1.19 };
+		var prsOR = { "Q1": 1, "Q2": 1, "Q3": 1, "Q4": 1.67, "Q5": 2.03 };
+		var tobaccoOR = { "Never": 1, "Previous": 1, "Current": 1.8 };
+		var alcoholOR = { "Never": 1, "Men28Women14": 1, "MenOver28WomenOver14": 1.26 };
+		var pancreatitisOR = { "No": 1, "Yes": 3.98 };
+		var diabetesOR = { "No": 1, "Yes": 2.59 };
+		var gallbladderOR = { "No": 1, "Yes": 2.05 };
+
+		var selectedGender = document.getElementById('genderSelect').value;
+		var selectedAge = document.getElementById('ageSelect').value;
+		var selectedBloodType = document.getElementById('bloodTypeSelect').value;
+		var selectedPRS = document.getElementById('prsSelect').value;
+		var selectedTobacco = document.getElementById('tobaccoSelect').value;
+		var selectedAlcohol = document.getElementById('alcoholSelect').value;
+		var selectedPancreatitis = document.getElementById('pancreatitisSelect').value;
+		var selectedDiabetes = document.getElementById('diabetesSelect').value;
+		var selectedGallbladder = document.getElementById('gallbladderSelect').value;    	
+		// IR values based on gender and age
+		var irValues = {
+			"Male": {
+				"40-44": 2.1,
+				"45-49": 4.8,
+				"50-54": 9.4,
+				"55-59": 17.7,
+				"60-64": 28.2,
+				"65-69": 43.1,
+				"70-74": 55.5,           
+			},
+			// Assuming IR values for Females if needed, or replicate the structure for females with their IRs
+			"Female": {
+				"40-44": 1.6,
+				"45-49": 3.4,
+				"50-54": 6.6,
+				"55-59": 11.7,
+				"60-64": 20.4,
+				"65-69": 33.2,
+				"70-74": 46.9, 
+			}
+		};		
+		// b2 values based on gender and age
+		var b2Values = {
+			"Male": {
+				"40-44": 179.7,
+				"45-49": 262.7,
+				"50-54": 412.4,
+				"55-59": 655.9,
+				"60-64": 1016.9,
+				"65-69": 1658.9,
+				"70-74": 2693.8,           
+			},
+			"Female": {
+				"40-44": 110.7,
+				"45-49": 170.3,
+				"50-54": 274.9,
+				"55-59": 421.6,
+				"60-64": 644.9,
+				"65-69": 1027.2,
+				"70-74": 1738.3,      
+			}
+		 };
+		 // b3 values based on gender and age
+		var b3Values = {
+			"Male": {
+				"40-44": 6.9,
+				"45-49": 6.9,
+				"50-54": 27.1,
+				"55-59": 27.1,
+				"60-64": 71.3,
+				"65-69": 71.3,
+				"70-74": 130.4,           
+			},
+			"Female": {
+				"40-44": 5,
+				"45-49": 5,
+				"50-54": 18.3,
+				"55-59": 18.3,
+				"60-64": 53.6,
+				"65-69": 53.6,
+				"70-74": 110.1, 
+			}
+		};	
+		 // b4 values based on gender and age
+		var b4Values = {
+			"Male": {
+				"40-44": 442.4,
+				"45-49": 442.4,
+				"50-54": 1068.3,
+				"55-59": 1068.3,
+				"60-64": 2675.8,
+				"65-69": 2675.8,
+				"70-74": 7318.9,           
+			},
+			"Female": {
+				"40-44": 281,
+				"45-49": 281,
+				"50-54": 696.5,
+				"55-59": 696.5,
+				"60-64": 1672.1,
+				"65-69": 1672.1,
+				"70-74": 4848.5, 
+			}
+		};	
+		// Calculate the total OR by multiplying the ORs of all selected risk factors
+		var totalOR = genderOR[selectedGender] * ageOR[selectedAge] * bloodTypeOR[selectedBloodType] * prsOR[selectedPRS] * tobaccoOR[selectedTobacco] * alcoholOR[selectedAlcohol] * pancreatitisOR[selectedPancreatitis] * diabetesOR[selectedDiabetes] * gallbladderOR[selectedGallbladder];
+		// Retrieve the IR (for b1) and b2 values based on gender and age
+		// Check if the selected gender and age are in the irValues structure
+		var selectedIR = irValues[selectedGender][selectedAge] || 0;
+		// Check if the selected gender and age are in the b2Values structure
+		var selectedB2 = b2Values[selectedGender][selectedAge] || 0;
+		var selectedB3 = b3Values[selectedGender][selectedAge] || 0;
+		var selectedB4 = b4Values[selectedGender][selectedAge] || 0;
+		// Calculate b1 b2 based on the selected IR
+		var b1 = (selectedIR / 100000) * 0.1;
+		var b2 = (selectedB2 / 100000);
+		var b3 = (selectedB3 / 100000) * 0.1;
+		var b4 = (selectedB4 / 100000);
+		// Calculate the 5-year absolute risk using the provided formula
+		var b1_totalOR = b1 * totalOR;
+		var fiveYearRiskNumerator = b1_totalOR;
+		var fiveYearRiskDenominator = b1_totalOR + b2;
+		var fiveYearRisk = (fiveYearRiskNumerator / fiveYearRiskDenominator) * (1 - Math.exp(-5 * fiveYearRiskDenominator));
+		var fiveYearRisknew=fiveYearRisk*100;
+		// Calculate the 10-year absolute risk using the provided formula
+		var b3_totalOR = b3 * totalOR;
+		var tenYearRiskNumerator = b3_totalOR;
+		var tenYearRiskDenominator = b3_totalOR + b4;
+		var tenYearRisk = (tenYearRiskNumerator / tenYearRiskDenominator) * (1 - Math.exp(-10 * tenYearRiskDenominator));
+		var tenYearRisknew=tenYearRisk*100;
+		
+		// // Display the results with the specified number of decimal places
+		document.getElementById('totalOR').innerText = 'Total OR: ' + totalOR.toFixed(4);
+		document.getElementById('b1Result').innerText = 'b1: ' + b1.toFixed(8); // Added to display b1 result
+		document.getElementById('b2Result').innerText = 'b2: ' + b2.toFixed(8); // Added to display b2 result
+		document.getElementById('b3Result').innerText = 'b3: ' + b3.toFixed(8); // Added to display b1 result
+		document.getElementById('b4Result').innerText = 'b4: ' + b4.toFixed(8); // Added to display b2 result
+		document.getElementById('fiveYearRisk').innerText = '5-year absolute risk of pancreatic cancer: ' + fiveYearRisknew.toFixed(2)+'%';
+		document.getElementById('tenYearRisk').innerText = '10-year absolute risk of pancreatic cancer: ' + tenYearRisknew.toFixed(2)+'%';
+        // Updating the chart with new values
+        updateChart(fiveYearRisknew.toFixed(2), tenYearRisknew.toFixed(2));
+    }
+	function updateChart(fiveYearRisk, tenYearRisk) {
+        riskChart.data.datasets[0].data[1] = fiveYearRisk;
+        riskChart.data.datasets[0].data[2] = tenYearRisk;
+        riskChart.update();
+    }
+</script>
 </body>
 </html>
