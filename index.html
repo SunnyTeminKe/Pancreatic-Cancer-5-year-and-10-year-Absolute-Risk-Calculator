@@ -40,14 +40,23 @@ body {
     input[type="button"]:hover {
         background-color: #ff69b4; /* Changes the button color when hovered */
     }
-    .result {
-        font-size: 1.2em; /* Larger text for results */
-        color: #333;
-        padding: 10px;
-        background: #e9e9e9; /* Light background for the result area */
-        border: 1px solid #ccc; /* Adds a border around the result area */
-        margin-top: 20px; /* Adds space above the result area */
+    .result, .large-bold {
+    font-size: 1.2em;
+    color: #333;
+    padding: 10px;
+    background: #e9e9e9;
+    border: 1px solid #ccc;
+    margin-top: 20px;
+	}
+	.large-bold {
+    font-size: 1.5em; /* Larger and bold for specific risk results */
+    font-weight:bold;
     }
+	.reference-text {
+    font-size: 1em; /* Standard text size for references */
+    text-align: left; /* Aligns text to the left */
+    margin-top: 30px; /* Adds space above the reference text */
+	}
 </style>
 <script>
 function calculateRisk() {
@@ -310,8 +319,12 @@ function calculateRisk() {
 	<div id="b3Result" style="display: none;">b3: </div>
 	<div id="b4Result" style="display: none;">b4: </div>
 
-	<div id="fiveYearRisk">5-year absolute risk of pancreatic cancer: </div>
-	<div id="tenYearRisk">10-year absolute risk of pancreatic cancer: </div>
+	<div id="fiveYearRisk" class="large-bold">5-year absolute risk of pancreatic cancer: </div>
+    <div id="tenYearRisk" class="large-bold">10-year absolute risk of pancreatic cancer: </div>
+	    <!-- Reference and welcome message -->
+    <p class="reference-text">
+        Welcome to our model. The reference for this model is from Ke TM, Lophatananon A, Muir KR. An Integrative Pancreatic Cancer Risk Prediction Model in the UK Biobank. Biomedicines. 2023 Dec 1;11(12):3206. doi: <a href="http://10.3390/biomedicines11123206" target="_blank">10.3390/biomedicines11123206</a>. PMID: 38137427; PMCID: PMC10740416. If you use it, please cite the above reference.
+    </p>
 </div>
 </body>
 </html>
